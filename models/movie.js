@@ -31,7 +31,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => /(https?:\/\/)(www)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=])*#?$/.test(v),
-      message: 'Некорректная ссылка',
+      message: 'Некорректная ссылка!',
     },
   },
 
