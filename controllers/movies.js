@@ -1,10 +1,15 @@
 const Forbidden = require('../errors/Forbidden');
 const NotFoundError = require('../errors/NotFoundError');
-
+const {
+  CREATED,
+  NOT_FOUND_MOVIE_MSG,
+  FORBIDDEN_MOVIE_MSG,
+} = require('../utils/constans');
 const Movie = require('../models/movie');
 
 const getMovies = (req, res, next) => {
-  Movie.find({})
+  const owner = req.user._id;
+  Movie.find({ owner })
     .then((data) => {
       res.send({ data });
     })
@@ -43,7 +48,7 @@ const createMovie = (req, res, next) => {
     movieId,
   })
     .then((data) => {
-      res.status(201).send({ data });
+      res.status(CREATED).send({ data });
     })
     .catch((error) => {
       next(error);
@@ -56,15 +61,15 @@ const deleteMovie = (req, res, next) => {
   Movie.findOne({ _id })
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Фильм не найден');
+        throw new NotFoundError(NOT_FOUND_MOVIE_MSG);
       }
       if (userId !== movie.owner._id.toString()) {
-        throw new Forbidden('Это не твой фильм. Пока');
+        throw new Forbidden(FORBIDDEN_MOVIE_MSG);
       }
       Movie.findByIdAndRemove(_id)
         .then((data) => {
           if (!data) {
-            throw new NotFoundError('Фильм не найден');
+            throw new NotFoundError(NOT_FOUND_MOVIE_MSG);
           }
           res.send({ data });
         })
@@ -77,42 +82,8 @@ const deleteMovie = (req, res, next) => {
     });
 };
 
-// const addLike = (req, res, next) => {
-//   Movie.findByIdAndUpdate(
-//     req.params.movieId,
-//     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-//     { new: true },
-//   ).then((data) => {
-//     if (!data) {
-//       throw new NotFoundError('Фильм не найден');
-//     }
-//     res.send({ data });
-//   })
-//     .catch((error) => {
-//       next(error);
-//     });
-// };
-
-// const deleteLike = (req, res, next) => {
-//   Movie.findByIdAndUpdate(
-//     req.params.movieId,
-//     { $pull: { likes: req.user._id } }, // убрать _id из массива
-//     { new: true },
-//   ).then((data) => {
-//     if (!data) {
-//       throw new NotFoundError('Фильм не найден');
-//     }
-//     res.send({ data });
-//   })
-//     .catch((error) => {
-//       next(error);
-//     });
-// };
-
 module.exports = {
   getMovies,
   createMovie,
   deleteMovie,
-  // addLike,
-  // deleteLike,
 };

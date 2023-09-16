@@ -1,29 +1,26 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 require('dotenv').config();
+const helmet = require('helmet');
 const express = require('express');
 const errorCelebrate = require('celebrate').errors;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const usersRouter = require('./routes/users');
-const moviesRouter = require('./routes/movies');
-const { login, createUser, signOut } = require('./controllers/users');
-const { auth } = require('./middlewares/auth');
-const validation = require('./middlewares/validation');
 const errorhandler = require('./middlewares/errorhandler');
-const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
+const router = require('./routes/index.js');
+const apiLimiter = require('./middlewares/ratelimiter')
+
+const { DB_URL } = process.env;
 
 const app = express();
-
+app.use(cors);
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb');
+mongoose.connect(DB_URL);
 
 app.use(requestLogger); // подключаем логгер запросов
-
-app.use(cors);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -31,19 +28,9 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('/users', auth, usersRouter);
+app.use(apiLimiter);
 
-app.use('/movies', auth, moviesRouter);
-
-app.post('/signin', validation.validateSignin, login);
-
-app.post('/signup', validation.validateSignup, createUser);
-
-app.post('/signout', signOut);
-
-app.use('/:404', () => {
-  throw new NotFoundError('страница не найдена');
-});
+app.use(router);
 
 app.use(errorLogger);
 

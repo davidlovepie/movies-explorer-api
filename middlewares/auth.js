@@ -1,6 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
 const Unauthorized = require('../errors/Unauthorized');
+const {
+  AUTHORIZED_REQUIRE_MSG,
+} = require('../utils/constans');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -11,7 +13,7 @@ const auth = (req, res, next) => {
     req.user = payload;
     next();
   } catch (e) {
-    const err = new Unauthorized('Необходима авторизация');
+    const err = new Unauthorized(AUTHORIZED_REQUIRE_MSG);
 
     next(err);
   }
