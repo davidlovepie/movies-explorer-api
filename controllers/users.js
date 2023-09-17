@@ -1,11 +1,16 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const Unauthorized = require('../errors/Unauthorized');
 const NotFoundError = require('../errors/NotFoundError');
+
+const {
+  NOT_FOUND_MSG,
+  UNAUTHORIZED_MSG,
+  OK_SIGNOUT_MSG,
+} = require('../utils/constans');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -41,7 +46,7 @@ const updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
     .then((data) => {
       if (!data) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(NOT_FOUND_MSG);
       }
       res.send({ data });
     })
@@ -55,13 +60,12 @@ const login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Unauthorized('Неправильные почта или пароль'));
+        return Promise.reject(new Unauthorized(UNAUTHORIZED_MSG));
       }
       return bcrypt.compare(password, user.password)
-      // eslint-disable-next-line consistent-return
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Unauthorized('Неправильные почта или пароль'));
+            return Promise.reject(new Unauthorized(UNAUTHORIZED_MSG));
           }
           return user;
         });
@@ -87,7 +91,7 @@ const getUserInfo = (req, res, next) => {
   User.findById({ _id })
     .then((data) => {
       if (!data) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(NOT_FOUND_MSG);
       }
       res.send({ data });
     })
@@ -101,7 +105,7 @@ const signOut = (req, res, next) => {
     res
       .clearCookie('jwt', { httpOnly: true })
       .status(200)
-      .send({ message: 'Вы успешно вышли из системы' });
+      .send(OK_SIGNOUT_MSG);
   } catch (error) {
     next(error);
   }

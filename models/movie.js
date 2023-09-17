@@ -12,7 +12,7 @@ const movieSchema = new mongoose.Schema({
   },
 
   duration: {
-    type: String,
+    type: Number,
     required: true,
   },
 
@@ -31,7 +31,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => /(https?:\/\/)(www)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=])*#?$/.test(v),
-      message: 'Некорректная ссылка',
+      message: 'Некорректная ссылка!',
     },
   },
 
@@ -60,6 +60,7 @@ const movieSchema = new mongoose.Schema({
 
   movieId: {
     type: Number,
+    required: true,
   },
 
   nameRU: {

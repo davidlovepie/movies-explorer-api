@@ -4,40 +4,52 @@ const Conflict = require('../errors/Conflict');
 const NotFoundError = require('../errors/NotFoundError');
 const Unauthorized = require('../errors/Unauthorized');
 const Forbidden = require('../errors/Forbidden');
+const {
+  BAD_REQUEST,
+  UNAUTHORIZED,
+  FORBIDDEN,
+  CONFLICT,
+  SERVER_ERROR,
+  NOT_FOUND,
+  BAD_REQUEST_MSG,
+  NOT_FOUND_MSG,
+  CONFLICT_MSG,
+  SERVER_ERROR_MSG,
+} = require('../utils/constans');
 
 module.exports = (err, req, res, next) => {
   console.log(err);
   if (err instanceof CastError || err instanceof ValidationError) {
     return res
-      .status(400)
-      .send({ message: `Переданы некорректные данные ${400}` });
+      .status(BAD_REQUEST)
+      .send({ message: BAD_REQUEST_MSG });
   }
   if (err instanceof DocumentNotFoundError) {
     return res
-      .status(404)
+      .status(NOT_FOUND)
       .send({
-        message: `Пользователь не найден ${404}`,
+        message: NOT_FOUND_MSG,
       });
   }
   if (err instanceof NotFoundError) {
-    return res.status(404).send({ message: err.message });
+    return res.status(NOT_FOUND).send({ message: err.message });
   }
   if (err instanceof Unauthorized) {
-    return res.status(401).send({ message: err.message });
+    return res.status(UNAUTHORIZED).send({ message: err.message });
   }
   if (err instanceof Conflict) {
-    return res.status(409).send({ message: err.message });
+    return res.status(CONFLICT).send({ message: err.message });
   }
   if (err instanceof BadRequest) {
-    return res.status(400).send({ message: err.message });
+    return res.status(BAD_REQUEST).send({ message: err.message });
   }
   if (err instanceof Forbidden) {
-    return res.status(403).send({ message: err.message });
+    return res.status(FORBIDDEN).send({ message: err.message });
   }
   if (err.code === 11000) {
-    return res.status(409).send({ message: 'Почта уже зарегистрирована' });
+    return res.status(CONFLICT).send({ message: CONFLICT_MSG });
   }
-  res.status(500).send('Ошибка на сервере');
+  res.status(SERVER_ERROR).send(SERVER_ERROR_MSG);
 
   return next();
 };
