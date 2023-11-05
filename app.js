@@ -13,8 +13,8 @@ const apiLimiter = require('./middlewares/ratelimiter');
 const { DB_URL } = process.env;
 
 const app = express();
-app.use(cors);
 app.use(helmet());
+app.use(cors);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
