@@ -3,9 +3,9 @@ const allowedCors = [
   'http://davidmovie.nomoredomainsmonster.ru',
   'https://api.davidmovie.nomoredomainsicu.ru/users/me',
   'https://api.davidmovie.nomoredomainsicu.ru/signup',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:4000',
+  'http://localhost:3000/',
+  'http://localhost:3001/',
+  'http://localhost:4000/',
   'https://158.160.80.64',
   'http://158.160.80.64',
 ];
