@@ -8,7 +8,7 @@ const errorhandler = require('./middlewares/errorhandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
 const router = require('./routes/index.js');
-const apiLimiter = require('./middlewares/ratelimiter')
+const apiLimiter = require('./middlewares/ratelimiter');
 
 const { DB_URL } = process.env;
 

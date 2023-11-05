@@ -30,7 +30,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => /(https?:\/\/)(www)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=])*#?$/.test(v),
+      validator: (v) => /\/uploads\/[^/]+\.(jpg|jpeg|png|gif|bmp|ico|svg|webp)/.test(v),
       message: 'Некорректная ссылка!',
     },
   },
@@ -48,7 +48,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => /(https?:\/\/)(www)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=])*#?$/.test(v),
+      validator: (v) => /\/uploads\/[^/]+\.(jpg|jpeg|png|gif|bmp|ico|svg|webp)/.test(v),
       message: 'Некорректная ссылка',
     },
   },

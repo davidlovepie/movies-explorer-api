@@ -1,6 +1,7 @@
 const { Joi, celebrate } = require('celebrate');
 
 const urlPattern = /^(https?:\/\/)(www\.)?([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]+)\.([a-zA-Z]{2,})(\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)*#?$/;
+const urlPatternNew = /\/uploads\/[^/]+\.(jpg|jpeg|png|gif|bmp|ico|svg|webp)/;
 
 module.exports.validateSignin = celebrate({
   body: Joi.object().keys({
@@ -34,9 +35,9 @@ module.exports.validateMovie = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(urlPattern),
+    image: Joi.string().required().pattern(urlPatternNew),
     trailerLink: Joi.string().required().pattern(urlPattern),
-    thumbnail: Joi.string().required().pattern(urlPattern),
+    thumbnail: Joi.string().required().pattern(urlPatternNew),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
