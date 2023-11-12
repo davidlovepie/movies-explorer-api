@@ -6,8 +6,8 @@ const allowedCors = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:4000',
-  'https://158.160.80.64',
-  'http://158.160.80.64',
+  'https://158.160.21.143',
+  'http://158.160.21.143',
 ];
 
 module.exports = (req, res, next) => {
